@@ -1,10 +1,9 @@
 import React from 'react';
+import './Header.css';
 
 const Header = () => {
     return (
-        <div>
-            Header
-        </div>
+        <header class="header"><h1>Weather Music App</h1></header>
     );
 }
 
