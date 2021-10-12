@@ -5,7 +5,7 @@ import './Main.css'
 const Main = () => {
     return (
         <div class="main">
-           <Search /> 
+           <Search />
         </div>
     );
 }

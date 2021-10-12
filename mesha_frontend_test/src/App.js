@@ -5,9 +5,11 @@ import Home from './pages/Home';
 
 function App() {
   return (
+    
     <Provider>
       <Home />
     </Provider>
+    
   );
 }
 

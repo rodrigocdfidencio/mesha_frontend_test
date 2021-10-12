@@ -1,23 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import './Cards.css';
+
 class Cards extends React.Component {
-  render() {
+render() {
     const { music } = this.props;
     const { title, subtitle, url, images } = music.track;
     return (
-      <div data-testid="music-card">
-        <h4>{ title }</h4>
-        <h5>{ subtitle }</h5>
-        <p>{ url }</p>
-        <img src={ images.coverart } alt="" />
-      </div>
+        <div class="col-sm-6">
+        <div class="card" >
+        <img class="card-img-top" src={ images.coverart } alt={title} />
+        <div class="card-body">
+        <p class="card-title">{ title }</p>
+        <p class="card-subtitle">{ subtitle }</p>
+        <a href={ url } class="btn btn-primary btn-sm">Ouvir</a>
+        </div>
+        </div>
+    </div>
     );
-  }
+}
 }
 
+
 Cards.propTypes = {
-  music: PropTypes.objectOf(String).isRequired,
+music: PropTypes.objectOf(String).isRequired,
 };
 
 export default Cards;

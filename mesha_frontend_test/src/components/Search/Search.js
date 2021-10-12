@@ -1,106 +1,99 @@
 import React, { useState, useEffect } from 'react';
-import Cards from '../Cards/Cards'
-import axios from 'axios';
+import { fetchWeather, fetchMusic } from '../../services/api';
+import Cards from '../Cards/Cards';
 
 import './Search.css';
 
 export default function Search() {
     const [weather, setWeather] = useState(false);
-    const [musics, setMusics] = useState(false);
     const [search, setSearch] = useState('');
-    const [musicalStyle, setMusicalStyle] = useState(false);
-
-
-    const getWeather = async () => {
-        let res = await axios.get("http://api.openweathermap.org/data/2.5/weather", {
-            params: {
-                q:search,
-                appid: 'c9f7dfe3a358ca7a55cc3fb42a9bbebf',
-                lang: 'pt',
-                units: 'metric'
-            }
-            
-        })
-        .then((res) => res.data)
-        console.log(res);
-        setWeather(res);
+    const [musicalStyle, setMusicalStyle] = useState('');
+    const [musics, setMusics] = useState(false);
+    
+    const weatherSearch = async () => {
+        const data = await fetchWeather(search);
+            setWeather(data);
+            setSearch('');
     }
 
     useEffect(() => {
-        if(weather) recomendedStyle();
-      }, [weather]);
+        if(weather){
+            let temp = weather['main']['temp'];
+            if(temp <= 16){
+                    setMusicalStyle('lofi');
+                    } else if(temp > 16 && temp <= 24){
+                    setMusicalStyle('classica');
+                    } else if(temp > 24 && temp <= 32){
+                    setMusicalStyle('pop');
+                    } else if(temp > 32 ){
+                    setMusicalStyle('rock');
+                    }
+        };
+    }, [weather])
+
+    useEffect(() => {
+        if(musicalStyle){
+            getMusicsList(musicalStyle)
+        };
+    }, [musicalStyle])
     
-
-    const recomendedStyle = () => {
-        let temp = weather['main']['temp'];
-        if(temp <= 16){
-            setMusicalStyle('lofi');
-        } else if(temp > 16 && temp <= 24){
-            setMusicalStyle('classica');
-        } else if(temp > 24 && temp <= 32){
-            setMusicalStyle('pop');
-        } else if(temp > 32 ){
-            setMusicalStyle('rock');
-        }
-        console.log('recom');
-        setTimeout(function() {
-            getMusicsList();
-        }, 1000);
-    }
-
     const getMusicsList = async () => {
-            let res = await axios.get("https://shazam.p.rapidapi.com/search", {
-        method: 'GET',
-        params: {
-            term: musicalStyle,
-            locale: 'pt-br',
-            limit: '5',
-        },
-        headers: {
-            'x-rapidapi-host': 'shazam.p.rapidapi.com',
-            'x-rapidapi-key': 'a73d3918demshdd7bd31bd74dbd4p1a61dcjsn9ca453de8010'
-        }
-    })
-    .then((res) => res.data)
-    console.log(res);
-    setMusics(res);
-        } 
-
-    if(!weather) {
+        const data = await fetchMusic(musicalStyle);
+            setMusics(data.data.tracks.hits);
+    }
+    
         return (
+    <div>
+        {!musics ? (
         <div>
         <input
+        className="search"
         placeholder="Cidade"
         id="city"
         type="search"
         value={search}
         onChange={(event) => setSearch(event.target.value)}></input>
-        <button type="submit" onClick={ getWeather }>Buscar</button>
+        <button className="btn btn-primary btn-xs" type="submit" onClick={ weatherSearch }>Buscar</button>
+        </div>
+        ) : (
+        <div class="row">
+        <div class="search-card">
+        <div>
+        <input
+        className="search"
+        placeholder="Cidade"
+        id="city"
+        type="search"
+        value={search}
+        onChange={(event) => setSearch(event.target.value)}></input>
+        <button className="btn btn-primary btn-xs" type="submit" onClick={ weatherSearch }>Buscar</button>
+        </div>
         
-        </div>
-        )
-    } else {
-    return (
-        <div>
-        <div>
-        <input
-        placeholder="Cidade"
-        id="city"
-        type="search"
-        value={search}
-        onChange={(event) => setSearch(event.target.value)}></input>
-        <button type="submit" onClick={ getWeather }>Buscar</button>
-        </div>
-            <div class="search-card">
-                <h4>Clima em { weather['name']}</h4>
-                <p>{weather['weather'][0]['description']}</p>
-                <ul>
-                    <li>Temperatura atual: { weather['main']['temp'] }</li>
-                </ul>
-                {/* { musics.tracks.hits.map((music) => <Cards key={ music.track.title } music={ music } />) } */}
+            {weather.main && (
+                <div className="city col-sm-6">
+                    <h2 className="city-name">
+                        <span>{weather.name}</span>
+                        <sup>{weather.sys.country}</sup>
+                    </h2>
+                    <div className="city-temp">
+                        {Math.round(weather.main.temp)}
+                        <sup>&deg;C</sup>
+                    </div>
+                    <div className="info">
+                        <img className="city-icon" src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt={weather.weather[0].description} />
+                        <p>{weather.weather[0].description}</p>
+                    </div>
+                    <p>O estilo de música recomendado é: { musicalStyle }</p>
+                </div>
+            )}
+            <div class="row">
+            <p>{ musics.map((music) => <Cards key={music.track.title} music={music} />)}</p>
             </div>
-            
-        </div>
-    )
+            </div>
+            </div>
+        )
+    
 }
+</div>
+)
 }
