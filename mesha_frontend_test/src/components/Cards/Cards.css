@@ -1,0 +1,13 @@
+.card {
+    height: 350px;
+    margin: 10px;
+}
+
+.card-title{
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.card-subtitle{
+    font-size: 12px;
+}
