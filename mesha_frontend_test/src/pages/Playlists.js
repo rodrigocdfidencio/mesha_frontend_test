@@ -1,16 +1,16 @@
 import React from 'react';
 import Header from '../components/Header/Header';
-import Main from '../components/Main/Main';
+import PlaylistsCard from '../components/PlaylistsCard/PlaylistsCard';
 import Footer from '../components/Footer/Footer';
 
-const Home = () => {
+const Playlists = () => {
     return (
         <div>
             <Header />
-            <Main />
-            <Footer />
+            <PlaylistsCard />
+            {/* <Footer /> */}
         </div>
     );
 }
 
-export default Home;
+export default Playlists;

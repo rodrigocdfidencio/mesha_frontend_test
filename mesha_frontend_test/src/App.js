@@ -1,15 +1,10 @@
 import React from 'react';
 import './App.css';
-import Provider from './context/Provider';
-import Home from './pages/Home';
+import Routes from './Routes';
 
 function App() {
   return (
-    
-    <Provider>
-      <Home />
-    </Provider>
-    
+      <Routes />
   );
 }
 

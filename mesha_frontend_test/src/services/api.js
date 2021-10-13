@@ -21,7 +21,7 @@ export const fetchMusic = async (musicalStyle) => {
   params: {
   term: musicalStyle,
   locale: 'pt-br',
-  limit: '5',
+  limit: '4',
 },
 headers: {
   'x-rapidapi-host': 'shazam.p.rapidapi.com',
