@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { fetchWeather, fetchMusic } from '../../services/api';
 import Cards from '../Cards/Cards';
 
@@ -10,6 +11,7 @@ export default function Search() {
   const [musicalStyle, setMusicalStyle] = useState('');
   const [musics, setMusics] = useState(false);
   const [city, setCity] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   const weatherSearch = async () => {
     setCity(search);
@@ -25,11 +27,12 @@ export default function Search() {
 
   const savePlaylist = () => {
     let date = new Date();
-    let dataFormatada = ((date.getDate() )) + "/" + ((date.getMonth() + 1)) + "/" + date.getFullYear(); 
+    let dataFormatada =
+      date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
 
     let str = city;
     let capitalized = str[0].toUpperCase() + str.substr(1);
-    
+
     let newData = [
       {
         data: dataFormatada,
@@ -48,19 +51,20 @@ export default function Search() {
     oldData.push(newData);
 
     localStorage.setItem('data', JSON.stringify(oldData));
+    setDisabled(true);
   };
 
   useEffect(() => {
     if (weather) {
       let temp = weather['main']['temp'];
       if (temp <= 16) {
-        setMusicalStyle('lofi');
+        setMusicalStyle('Lofi');
       } else if (temp > 16 && temp <= 24) {
-        setMusicalStyle('classica');
+        setMusicalStyle('Classica');
       } else if (temp > 24 && temp <= 32) {
-        setMusicalStyle('pop');
+        setMusicalStyle('Pop');
       } else if (temp > 32) {
-        setMusicalStyle('rock');
+        setMusicalStyle('Rock');
       }
     }
   }, [weather]);
@@ -73,11 +77,37 @@ export default function Search() {
 
   return (
     <div>
-      
-      
-          {!musics ? (
+      {!musics ? (
+        <div>
+          <div>
+            Selecione uma cidade e receba, além das condições meteorológicas,
+            uma lista de músicas personalizada
+          </div>
+          <input
+            className='search'
+            placeholder='Cidade'
+            id='city'
+            type='search'
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          ></input>
+          <button
+            className='btn btn-primary btn-xs'
+            type='submit'
+            onClick={weatherSearch}
+          >
+            Buscar
+          </button>
+          <Link to='/playlists'>
+            <button className='btn btn-primary btn-xs' type='submit'>
+              Minhas Playlists
+            </button>
+          </Link>
+        </div>
+      ) : (
+        <div>
+          <div>
             <div>
-            
               <input
                 className='search'
                 placeholder='Cidade'
@@ -93,72 +123,65 @@ export default function Search() {
               >
                 Buscar
               </button>
-            </div>
-            
-          ) : (
-            <div>
-            <div>
-              <div>
-                <input
-                  className='search'
-                  placeholder='Cidade'
-                  id='city'
-                  type='search'
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                ></input>
-                <button
-                  className='btn btn-primary btn-xs'
-                  type='submit'
-                  onClick={weatherSearch}
-                >
-                  Buscar
+              <Link to='/playlists'>
+                <button className='btn btn-primary btn-xs' type='submit'>
+                  Minhas Playlists
                 </button>
-                </div>
-                <div className="container">
-                <div className='row'>
-                <div className="col-md-4">
-                {weather.main && (
-                  <div className='city'>
-                    <h2 className='city-name'>
-                      <span>{weather.name}</span>
-                      <sup>{weather.sys.country}</sup>
-                    </h2>
-                    <div className='city-temp'>
-                      {Math.round(weather.main.temp)}
-                      <sup>&deg;C</sup>
+              </Link>
+            </div>
+            <div class='row'>
+              <div class='col-4'>
+                <div>
+                  <div>
+                    <div>
+                      {weather.main && (
+                        <div className='city'>
+                          <h2 className='city-name'>
+                            <span>{weather.name}</span>
+                            <sup>{weather.sys.country}</sup>
+                          </h2>
+                          <div className='city-temp'>
+                            {Math.round(weather.main.temp)}
+                            <sup>&deg;C</sup>
+                          </div>
+                          <div className='info'>
+                            <img
+                              className='city-icon'
+                              src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+                              alt={weather.weather[0].description}
+                            />
+                            <p>{weather.weather[0].description}</p>
+                          </div>
+                          <div className='music-style'>
+                            O estilo de música recomendado é: {musicalStyle}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <div className='info'>
-                      <img
-                        className='city-icon'
-                        src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
-                        alt={weather.weather[0].description}
-                      />
-                      <p>{weather.weather[0].description}</p>
-                    </div>
-                    <p>O estilo de música recomendado é: {musicalStyle}</p>
                   </div>
-                )}
                 </div>
               </div>
               <div className='col'>
-              <button
-                  className='btn btn-primary btn-xs'
-                  onClick={savePlaylist}
-                  type='submit'
-                >
-                  Salvar playlist como favorita
-                </button>
                 <div className='row'>
                   {musics.map((music) => (
                     <Cards key={music.track.title} music={music} />
                   ))}
                 </div>
+                <button
+                  className='btn btn-primary btn-xs'
+                  onClick={savePlaylist}
+                  type='submit'
+                  disabled={disabled}
+                >
+                  {!disabled
+                    ? 'Salvar playlist como favorita'
+                    : 'Playlist salva'}
+                </button>
               </div>
             </div>
-            </div>
-            </div>
-          )}
-      </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

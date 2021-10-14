@@ -1,13 +1,14 @@
 .card {
-    height: 350px;
-    margin: 10px;
+  height: 350px;
+  margin: 10px;
+  box-shadow: 3px 3px rgb(0, 208, 177), -1em 0 0.4em rgb(96, 96, 96);
 }
 
-.card-title{
-    font-size: 12px;
-    font-weight: bold;
+.card-title {
+  font-size: 12px;
+  font-weight: bold;
 }
 
-.card-subtitle{
-    font-size: 12px;
+.card-subtitle {
+  font-size: 12px;
 }
