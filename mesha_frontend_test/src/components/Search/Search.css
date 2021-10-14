@@ -10,6 +10,10 @@
   max-width: 400px;
 }
 
+.col-4 {
+  marign-left: -20px;
+}
+
 .search {
   width: 200px;
   outline: 2px solid #eee;
@@ -21,10 +25,9 @@
 
 .city {
   outline: 2px solid #eee;
-  width: 100%;
+  width: 300px;
   display: flex;
   align-items: center;
-  justify-content: center;
   flex-direction: column;
   margin-bottom: 30px;
   padding: 30px;
@@ -53,6 +56,11 @@ p {
   font-size: 2em;
 }
 
+.music-style {
+  text-align: center;
+  font-size: 1.5em;
+}
+
 .city-name sup {
   padding: 0.2em 0.6em;
   margin-left: 0.2em;
@@ -73,7 +81,7 @@ p {
 }
 
 .btn-primary {
-  margin-right:10px;
+  margin-right: 10px;
 }
 
 @media only screen and (max-width: 600px) {

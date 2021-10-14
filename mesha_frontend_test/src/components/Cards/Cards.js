@@ -1,6 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
 import './Cards.css';
 
 class Cards extends React.Component {
@@ -23,9 +21,5 @@ class Cards extends React.Component {
     );
   }
 }
-
-Cards.propTypes = {
-  music: PropTypes.objectOf(String).isRequired,
-};
 
 export default Cards;
